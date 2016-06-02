@@ -5,14 +5,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class MyGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	TextureRegion stand;
+	TextureRegion jump;
 	float x, y, xv, yv;
 	boolean canJump;
+	boolean faceRight = true;
+	Animation walk;
+	float time;
 
 	static final float MAX_VELOCITY = 300f;
 	static final float MAX_JUMP_VELOCITY = 2000f;
@@ -28,16 +33,44 @@ public class MyGdxGame extends ApplicationAdapter {
 		Texture sheet = new Texture("koalio.png");
 		TextureRegion[] [] tiles = TextureRegion.split(sheet, WIDTH, HEIGHT);
 		stand = tiles[0][0];
+		jump = tiles[0][1];
+		walk = new Animation(0.15f, tiles[0][2], tiles[0][3], tiles[0][4]);
 	}
 
 	@Override
 	public void render () {
 		move();
 
+		time += Gdx.graphics.getDeltaTime();
+
+		TextureRegion img;
+		if (y>0)
+		{
+			img = jump;
+		}
+		else if (xv!= 0)
+		{
+			img = walk.getKeyFrame(time, true);
+		}
+		else
+
+		{
+			img = stand;
+		}
+
+
 		Gdx.gl.glClearColor(0.5f, 0.5f, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		batch.draw(stand, x, y, WIDTH*3, HEIGHT*3 );
+		if (faceRight)
+		{
+			batch.draw(img, x, y, WIDTH * 3, HEIGHT * 3);
+		}
+		else
+		{
+			batch.draw(img, x + WIDTH*3, y, WIDTH* -3, HEIGHT* 3 );
+		}
+
 		batch.end();
 	}
 
@@ -55,11 +88,13 @@ public class MyGdxGame extends ApplicationAdapter {
 		if (Gdx.input.isKeyPressed(Input.Keys.RIGHT))
 		{
 			xv = MAX_VELOCITY;
+			faceRight = true;
 		}
 
 		if (Gdx.input.isKeyPressed(Input.Keys.LEFT))
 		{
 			xv = -MAX_VELOCITY;
+			faceRight = false;
 		}
 
 		yv += GRAVITY;
@@ -75,6 +110,8 @@ public class MyGdxGame extends ApplicationAdapter {
 			y = 0;
 			canJump =true;
 		}
+
+
 
 	}
 
