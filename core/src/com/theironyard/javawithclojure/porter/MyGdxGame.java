@@ -111,6 +111,13 @@ public class MyGdxGame extends ApplicationAdapter {
 			canJump =true;
 		}
 
+		if (x<(-WIDTH*3)) {
+			x = (-WIDTH*3);
+		}
+		if (x>(800))
+		{
+			x = x%(800+(WIDTH*3));
+		}
 
 
 	}
