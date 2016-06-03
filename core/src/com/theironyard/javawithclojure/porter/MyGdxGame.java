@@ -111,12 +111,13 @@ public class MyGdxGame extends ApplicationAdapter {
 			canJump =true;
 		}
 
-		if (x<(-WIDTH*3)) {
-			x = (-WIDTH*3);
-		}
-		if (x>(800))
+		if (x<0)
 		{
-			x = x%(800+(WIDTH*3));
+			x = 0;
+		}
+		if (x>(800-(WIDTH*3)))
+		{
+			x = (800-(WIDTH*3));
 		}
 
 
@@ -125,7 +126,7 @@ public class MyGdxGame extends ApplicationAdapter {
 	public float decelerate(float velocity)
 	{
 		velocity *= DECLERATION_RATE;
-		if (Math.abs(velocity) < 1)
+		if (Math.abs(velocity) < 10)
 		{
 			velocity = 0;
 		}
